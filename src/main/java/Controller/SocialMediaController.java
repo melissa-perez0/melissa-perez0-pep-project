@@ -28,7 +28,7 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         //post endpoint on /register
-        app.post("/register", this::postUserRegistration);
+        app.post("/register", this::postAccountRegistration);
 
         return app;
     }
@@ -42,7 +42,7 @@ public class SocialMediaController {
      *            be available to this method automatically thanks to the app.post method.
      * @throws JsonProcessingException will be thrown if there is an issue converting JSON into an object.
      */
-    private void postUserRegistration(Context context) {
+    private void postAccountRegistration(Context context) {
         ObjectMapper mapper = new ObjectMapper();
         //Account account = mapper.readValue(context.body(), Account.class);
         /*Account registeredUser = accountService.addAccount(account);
