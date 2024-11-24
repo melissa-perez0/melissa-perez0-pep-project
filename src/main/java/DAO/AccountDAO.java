@@ -12,7 +12,7 @@ public class AccountDAO {
      *
      * Retrieve all accounts from the account table.
      *
-     * @return all flights.
+     * @return all accounts.
      */
     public List<Account> getAllAccounts(){
         Connection connection = ConnectionUtil.getConnection();
@@ -31,6 +31,29 @@ public class AccountDAO {
             System.out.println(exception.getMessage());
         }
         return accounts;
+    }
+
+    /**
+     * Retrieve a specific account using its username.
+     *
+     * @param username an account username.
+     */
+    public Account getAccountByUsername(String username){
+        Connection connection = ConnectionUtil.getConnection();
+        try{
+            String sql = "SELECT * FROM account WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Account account = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
+                return account;
+            }
+        }catch(SQLException exception){
+            System.out.println(exception.getMessage());
+        }
+        return null;
     }
     
 }
