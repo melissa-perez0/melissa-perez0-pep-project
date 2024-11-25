@@ -1,18 +1,22 @@
 package Controller;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
 
     public SocialMediaController() {
         accountService = new AccountService();
+        messageService = new MessageService();
     }
 
     /**
@@ -30,6 +34,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountRegistration);
         app.post("/login", this::postAccountLogin);
+        app.post("/messages", this::postCreateMessage);
 
         return app;
     }
@@ -47,7 +52,7 @@ public class SocialMediaController {
         Account account = mapper.readValue(context.body(), Account.class);
         // check username and password requirements
         boolean isValidUsernamePassword = validateUsernamePassword(account.getUsername(), account.getPassword());
-        if(!isValidUsernamePassword) {
+        if (!isValidUsernamePassword) {
             context.status(400);
             return;
         }
@@ -61,7 +66,7 @@ public class SocialMediaController {
         }
     }
 
-     /**
+    /**
      * Handler to login an account.
      * 
      * @param context
@@ -72,7 +77,7 @@ public class SocialMediaController {
     private void postAccountLogin(Context context) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(context.body(), Account.class);
-        
+
         Account loggedUser = accountService.getAccount(account);
         if (loggedUser == null) {
             context.status(401);
@@ -81,6 +86,7 @@ public class SocialMediaController {
             context.json(mapper.writeValueAsString(loggedUser));
         }
     }
+
     /**
      * Validate username and password requirements.
      * username must not be blank.
@@ -94,13 +100,70 @@ public class SocialMediaController {
      */
     private boolean validateUsernamePassword(String username, String password) {
         final int passwordMinLength = 4;
-        if(username == null || username.trim().isEmpty()) {
+        if (username == null || username.trim().isEmpty()) {
             return false;
-        }
-        else if(password == null|| password.length() < passwordMinLength) {
+        } else if (password == null || password.length() < passwordMinLength) {
             return false;
         }
         return true;
     }
+
+    /**
+     * Handler to create a new message.
+     * 
+     * @param context
+     * 
+     * @throws JsonProcessingException will be thrown if there is an issue
+     *                                 converting JSON into an object.
+     */
+    private void postCreateMessage(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+
+        // check message_text requirements
+        boolean isValidMessageText = validateMessage(message.getMessage_text());
+        if(!isValidMessageText){
+            context.status(400);
+            return;
+        }
+
+        Account account = accountService.getAccountId(account);
+        if(account == null){
+            context.status(400);
+            return; 
+        }
+
+        // determine the status code from message insert
+        Message newMessage = messageService.addMessage(message);
+        if (messageService == null) {
+            context.status(400);
+        } else {
+            context.status(200);
+            context.json(mapper.writeValueAsString(registeredUser));
+        }
+    }
+
+    /**
+     * Validate message_text requirements.
+     * message_text must not be blank.
+     * message_text is not longer than 255 characters.
+     * message_text must be posted by a real, existing user.
+     * 
+     * @param context
+     * 
+     * @throws JsonProcessingException will be thrown if there is an issue
+     *                                 converting JSON into an object.
+     */
+    private boolean validateMessage(String text) {
+        final int messageMaxLength = 255;
+        if(text == null || text.trim().isEmpty()) {
+            return false;
+        }
+        else if(text.length() > messageMaxLength) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

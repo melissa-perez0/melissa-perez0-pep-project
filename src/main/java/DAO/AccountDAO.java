@@ -57,6 +57,30 @@ public class AccountDAO {
         return null;
     }
 
+    /**
+     * Retrieve a specific account using its account id.
+     *
+     * @param username an account username.
+     */
+    public Account getAccountById(int id) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            String sql = "SELECT * FROM account WHERE account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Account account = new Account(rs.getInt("account_id"), rs.getString("username"),
+                        rs.getString("password"));
+                return account;
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
+    }
+
 
      /**
      * Add an account record into the database which matches the values contained in the account object.
