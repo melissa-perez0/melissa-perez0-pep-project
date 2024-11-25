@@ -3,7 +3,6 @@ package Service;
 import Model.Account;
 import DAO.AccountDAO;
 
-import java.util.List;
 
 public class AccountService {
     AccountDAO accountDAO;
@@ -28,29 +27,19 @@ public class AccountService {
     }
 
     /**
-     * TODO: Use the FlightDAO to add a new flight to the database.
-     *
-     * This method should also return the added flight. A distinction should be made
-     * between *transient* and
-     * *persisted* objects - the *transient* flight Object given as the parameter
-     * will not contain the flight's id,
-     * because it is not yet a database record. When this method is used, it should
-     * return the full persisted flight,
-     * which will contain the flight's id. This way, any part of the application
-     * that uses this method has
-     * all information about the new flight, because knowing the new flight's ID is
-     * necessary. This means that the
-     * method should return the Flight returned by the flightDAO's insertFlight
-     * method, and not the flight provided by
-     * the parameter 'flight'.
+     * Use the AccountDAO to add a new account to the database.
      *
      * @param account an object representing a new Account.
-     * @return the newly added flight if the add operation was successful, including
-     *         the flight_id. We do this to
-     *         inform our provide the front-end client with information about the
-     *         added Flight.
+     * @return the newly added account if the add operation was successful, including
+     *         the account_id.
      */
     public Account addAccount(Account account) {
+        // check to see if username not in use
+        Account usernameInUse = accountDAO.getAccountByUsername(account.getUsername());
+        if(usernameInUse != null) {
+            return null;
+        }
+        // else add new account
         return accountDAO.insertAccount(account);
     }
 

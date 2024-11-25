@@ -9,7 +9,6 @@ import java.util.List;
 
 public class AccountDAO {
     /**
-     *
      * Retrieve all accounts from the account table.
      *
      * @return all accounts.
