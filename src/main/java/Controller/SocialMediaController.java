@@ -122,15 +122,15 @@ public class SocialMediaController {
 
         // check message_text requirements
         boolean isValidMessageText = validateMessage(message.getMessage_text());
-        if(!isValidMessageText){
+        if (!isValidMessageText) {
             context.status(400);
             return;
         }
 
-        Account account = accountService.getAccountId(account);
-        if(account == null){
+        Account account = accountService.getAccountId(message.getPosted_by());
+        if (account == null) {
             context.status(400);
-            return; 
+            return;
         }
 
         // determine the status code from message insert
@@ -139,7 +139,7 @@ public class SocialMediaController {
             context.status(400);
         } else {
             context.status(200);
-            context.json(mapper.writeValueAsString(registeredUser));
+            context.json(mapper.writeValueAsString(newMessage));
         }
     }
 
@@ -156,14 +156,12 @@ public class SocialMediaController {
      */
     private boolean validateMessage(String text) {
         final int messageMaxLength = 255;
-        if(text == null || text.trim().isEmpty()) {
+        if (text == null || text.trim().isEmpty()) {
             return false;
-        }
-        else if(text.length() > messageMaxLength) {
+        } else if (text.length() > messageMaxLength) {
             return false;
         }
         return true;
     }
-
 
 }

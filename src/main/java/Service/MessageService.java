@@ -11,8 +11,7 @@ public class MessageService {
      */
     public MessageService() {
         messageDAO = new messageDAO();
-    }
-
+    }  
     /**
      * Constructor for an messageService when a messageDAO is provided.
      * This is used for when a mock messageDAO that exhibits mock behavior is used

@@ -44,14 +44,14 @@ public class AccountService {
     }
 
     /**
-     * Use the AccountDAO to get an existing account using the username from the database.
+     * Use the AccountDAO to get an existing account using the poster id from the database.
      *
-     * @param account an object representing a new Account.
-     * @return the newly added account if the add operation was successful, including
+     * @param id an object representing a poster id.
+     * @return the newly added account if the get operation was successful, including
      *         the account_id.
      */
-    public Account getAccountId(Account account) {
-        Account dbAccount = accountDAO.getAccountById(account.getAccount_id());
+    public Account getAccountId(int id) {
+        Account dbAccount = accountDAO.getAccountById(id);
         // if account retrieval(id) fails
         if(dbAccount == null) {
             return null;
@@ -60,10 +60,10 @@ public class AccountService {
     }
 
      /**
-     * Use the AccountDAO to get an existing account using the id from the database.
+     * Use the AccountDAO to get an existing account using the username from the database.
      *
      * @param account an object representing a new Account.
-     * @return the newly added account if the add operation was successful, including
+     * @return the newly added account if the get operation was successful, including
      *         the account_id.
      */
     public Account getAccount(Account account) {
