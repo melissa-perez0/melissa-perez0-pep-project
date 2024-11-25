@@ -10,8 +10,9 @@ public class MessageService {
      * No-args constructor for an messageService instantiates a plain messageDAO.
      */
     public MessageService() {
-        messageDAO = new messageDAO();
+        messageDAO = new MessageDAO();
     }  
+    
     /**
      * Constructor for an messageService when a messageDAO is provided.
      * This is used for when a mock messageDAO that exhibits mock behavior is used
