@@ -29,6 +29,7 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountRegistration);
+        app.post("/login", this::postAccountLogin);
 
         return app;
     }
@@ -50,7 +51,7 @@ public class SocialMediaController {
             context.status(400);
             return;
         }
-        // determine the status code of account insert
+        // determine the status code from account insert
         Account registeredUser = accountService.addAccount(account);
         if (registeredUser == null) {
             context.status(400);
@@ -60,6 +61,26 @@ public class SocialMediaController {
         }
     }
 
+     /**
+     * Handler to login an account.
+     * 
+     * @param context
+     * 
+     * @throws JsonProcessingException will be thrown if there is an issue
+     *                                 converting JSON into an object.
+     */
+    private void postAccountLogin(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(context.body(), Account.class);
+        
+        Account loggedUser = accountService.getAccount(account);
+        if (loggedUser == null) {
+            context.status(401);
+        } else {
+            context.status(200);
+            context.json(mapper.writeValueAsString(loggedUser));
+        }
+    }
     /**
      * Validate username and password requirements.
      * username must not be blank.

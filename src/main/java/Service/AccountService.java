@@ -35,12 +35,31 @@ public class AccountService {
      */
     public Account addAccount(Account account) {
         // check to see if username not in use
-        Account usernameInUse = accountDAO.getAccountByUsername(account.getUsername());
-        if(usernameInUse != null) {
+        Account dbAccount = accountDAO.getAccountByUsername(account.getUsername());
+        if(dbAccount != null) {
             return null;
         }
         // else add new account
         return accountDAO.insertAccount(account);
+    }
+
+    /**
+     * Use the AccountDAO to get an existing account from the database.
+     *
+     * @param account an object representing a new Account.
+     * @return the newly added account if the add operation was successful, including
+     *         the account_id.
+     */
+    public Account getAccount(Account account) {
+        Account dbAccount = accountDAO.getAccountByUsername(account.getUsername());
+        // if account retrieval(username) fails or password does not match
+        if(dbAccount == null) {
+            return null;
+        }
+        else if (!dbAccount.getPassword().equals(account.getPassword())){
+            return null;
+        }
+        return dbAccount;
     }
 
 }
