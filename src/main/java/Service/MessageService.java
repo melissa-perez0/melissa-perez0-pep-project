@@ -3,6 +3,8 @@ package Service;
 import Model.Message;
 import DAO.MessageDAO;
 
+import java.util.List;
+
 public class MessageService {
     MessageDAO messageDAO;
 
@@ -34,6 +36,15 @@ public class MessageService {
      */
     public Message addMessage(Message message) {
         return messageDAO.insertMessage(message);
+    }
+
+     /**
+     * Use the MessageDAO to retrieve a List containing all messages.
+     *
+     * @return all messages in the database.
+     */
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
     }
 
 }

@@ -34,6 +34,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountRegistration);
         app.post("/login", this::postAccountLogin);
+        app.get("/messages", this::getAllMessages);
         app.post("/messages", this::postCreateMessage);
 
         return app;
@@ -162,6 +163,15 @@ public class SocialMediaController {
             return false;
         }
         return true;
+    }
+
+     /**
+     * Handler to retrieve all messages.
+     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
+     *            be available to this method automatically thanks to the app.put method.
+     */
+    private void getAllMessages(Context ctx){
+        ctx.json(messageService.getAllMessages());
     }
 
 }
