@@ -39,7 +39,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessage);
         app.delete("/messages/{message_id}", this::deleteMessage);
         app.patch("/messages/{message_id}", this::updateMessage);
-        // app.get("/accounts/{account_id}/messages", this::getAccountMessages);
+        app.get("/accounts/{account_id}/messages", this::getAccountMessages);
         return app;
     }
 
@@ -249,5 +249,19 @@ public class SocialMediaController {
             context.json(mapper.writeValueAsString(messageUpdated));
         }
 
+    }
+
+    /**
+     * Handler to retrieve a account messages.
+     * 
+     * @param context the context object handles information HTTP requests and
+     *                generates responses within Javalin. It will
+     *                be available to this method automatically thanks to the
+     *                app.put method.
+     */
+    private void getAccountMessages(Context context) throws JsonProcessingException {
+        int account_id = Integer.parseInt(context.pathParam("account_id"));
+        context.status(200).json(accountService.getAccountMessages(account_id));
+       
     }
 }

@@ -1,7 +1,10 @@
 package Service;
 
 import Model.Account;
+import Model.Message;
 import DAO.AccountDAO;
+
+import java.util.List;
 
 public class AccountService {
     AccountDAO accountDAO;
@@ -79,6 +82,15 @@ public class AccountService {
             return null;
         }
         return dbAccount;
+    }
+
+    /**
+     * Use the AccountDAO to retrive all account messages.
+     *
+     * @return messages with id in the database.
+     */
+    public List<Message> getAccountMessages(int account_id) {
+        return accountDAO.getAccountMessages(account_id);
     }
 
 }
