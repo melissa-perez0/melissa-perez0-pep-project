@@ -110,4 +110,30 @@ public class MessageDAO {
         }
         return null;
     }
+
+    /**
+     * Update a specific message using its message id and details.
+     *
+     * @param message a message.
+     */
+    public Message updateMessage(int id, String message) {
+        Connection connection = ConnectionUtil.getConnection();
+
+        try {
+            Message getMessage = getMessageById(id);
+
+            if (getMessage != null) {
+                String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, message);
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+                getMessage = getMessageById(id);
+                return getMessage;
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
+    }
 }

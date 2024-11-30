@@ -65,4 +65,14 @@ public class MessageService {
     public Message deleteMessage(int message_id) {
         return messageDAO.deleteMessageById(message_id);
     }
+
+
+    /**
+     * Use the MessageDAO to update a Message.
+     *
+     * @return a message with id in the database.
+     */
+    public Message updateMessage(int message_id, String text) {
+        return messageDAO.updateMessage(message_id, text);
+    }
 }

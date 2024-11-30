@@ -38,8 +38,8 @@ public class SocialMediaController {
         app.post("/messages", this::postCreateMessage);
         app.get("/messages/{message_id}", this::getMessage);
         app.delete("/messages/{message_id}", this::deleteMessage);
-        //app.patch("/messages/{message_id}", this::patchMessage);
-        //app.get("/accounts/{account_id}/messages", this::getAccountMessages);
+        app.patch("/messages/{message_id}", this::updateMessage);
+        // app.get("/accounts/{account_id}/messages", this::getAccountMessages);
         return app;
     }
 
@@ -159,9 +159,11 @@ public class SocialMediaController {
      */
     private boolean validateMessage(String text) {
         final int messageMaxLength = 255;
+
         if (text == null || text.trim().isEmpty()) {
             return false;
         } else if (text.length() > messageMaxLength) {
+
             return false;
         }
         return true;
@@ -199,7 +201,7 @@ public class SocialMediaController {
         }
     }
 
-     /**
+    /**
      * Handler to delete a message.
      * 
      * @param context the context object handles information HTTP requests and
@@ -211,12 +213,41 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         int message_id = Integer.parseInt(context.pathParam("message_id"));
         Message messageFound = messageService.deleteMessage(message_id);
-        System.out.println(messageFound);
         if (messageFound != null) {
             context.status(200).json(mapper.writeValueAsString(messageFound));
         } else {
             context.status(200).result("");
 
         }
+    }
+
+    /**
+     * Handler to update a message.
+     * 
+     * @param context the context object handles information HTTP requests and
+     *                generates responses within Javalin. It will
+     *                be available to this method automatically thanks to the
+     *                app.put method.
+     */
+    private void updateMessage(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        Message message = mapper.readValue(context.body(), Message.class);
+
+        // check message_text requirements
+        boolean isValidMessageText = validateMessage(message.getMessage_text());
+        if (!isValidMessageText) {
+            context.status(400);
+            return;
+        }
+        // determine the status code from message update
+        Message messageUpdated = messageService.updateMessage(message_id, message.getMessage_text());
+        if (messageUpdated == null) {
+            context.status(400);
+        } else {
+            context.status(200);
+            context.json(mapper.writeValueAsString(messageUpdated));
+        }
+
     }
 }
