@@ -87,4 +87,27 @@ public class MessageDAO {
         }
         return null;
     }
+
+    /**
+     * Delete a specific message using its message id.
+     *
+     * @param id a message id.
+     */
+    public Message deleteMessageById(int id) {
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            Message getMessage = getMessageById(id);
+            if (getMessage != null) {
+                String sql = "DELETE FROM message WHERE message_id = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+                return getMessage;
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+        return null;
+    }
 }

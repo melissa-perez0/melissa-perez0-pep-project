@@ -56,4 +56,13 @@ public class MessageService {
     public Message getMessage(int message_id) {
         return messageDAO.getMessageById(message_id);
     }
+
+    /**
+     * Use the MessageDAO to delete a Message from an id.
+     *
+     * @return a message with id in the database.
+     */
+    public Message deleteMessage(int message_id) {
+        return messageDAO.deleteMessageById(message_id);
+    }
 }

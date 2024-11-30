@@ -37,6 +37,9 @@ public class SocialMediaController {
         app.get("/messages", this::getMessages);
         app.post("/messages", this::postCreateMessage);
         app.get("/messages/{message_id}", this::getMessage);
+        app.delete("/messages/{message_id}", this::deleteMessage);
+        //app.patch("/messages/{message_id}", this::patchMessage);
+        //app.get("/accounts/{account_id}/messages", this::getAccountMessages);
         return app;
     }
 
@@ -192,6 +195,27 @@ public class SocialMediaController {
             context.status(200).json(mapper.writeValueAsString(messageFound));
         } else {
             context.status(200);
+
+        }
+    }
+
+     /**
+     * Handler to delete a message.
+     * 
+     * @param context the context object handles information HTTP requests and
+     *                generates responses within Javalin. It will
+     *                be available to this method automatically thanks to the
+     *                app.put method.
+     */
+    private void deleteMessage(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        Message messageFound = messageService.deleteMessage(message_id);
+        System.out.println(messageFound);
+        if (messageFound != null) {
+            context.status(200).json(mapper.writeValueAsString(messageFound));
+        } else {
+            context.status(200).result("");
 
         }
     }
