@@ -3,7 +3,6 @@ package Service;
 import Model.Account;
 import DAO.AccountDAO;
 
-
 public class AccountService {
     AccountDAO accountDAO;
 
@@ -30,13 +29,14 @@ public class AccountService {
      * Use the AccountDAO to add a new account to the database.
      *
      * @param account an object representing a new Account.
-     * @return the newly added account if the add operation was successful, including
+     * @return the newly added account if the add operation was successful,
+     *         including
      *         the account_id.
      */
     public Account addAccount(Account account) {
         // check to see if username not in use
         Account dbAccount = accountDAO.getAccountByUsername(account.getUsername());
-        if(dbAccount != null) {
+        if (dbAccount != null) {
             return null;
         }
         // else add new account
@@ -44,35 +44,38 @@ public class AccountService {
     }
 
     /**
-     * Use the AccountDAO to get an existing account using the poster id from the database.
+     * Use the AccountDAO to get an existing account using the poster id from the
+     * database.
      *
      * @param id an object representing a poster id.
-     * @return the newly added account if the get operation was successful, including
+     * @return the newly added account if the get operation was successful,
+     *         including
      *         the account_id.
      */
     public Account getAccountId(int id) {
         Account dbAccount = accountDAO.getAccountById(id);
         // if account retrieval(id) fails
-        if(dbAccount == null) {
+        if (dbAccount == null) {
             return null;
         }
         return dbAccount;
     }
 
-     /**
-     * Use the AccountDAO to get an existing account using the username from the database.
+    /**
+     * Use the AccountDAO to get an existing account using the username from the
+     * database.
      *
      * @param account an object representing a new Account.
-     * @return the newly added account if the get operation was successful, including
+     * @return the newly added account if the get operation was successful,
+     *         including
      *         the account_id.
      */
     public Account getAccount(Account account) {
         Account dbAccount = accountDAO.getAccountByUsername(account.getUsername());
         // if account retrieval(username) fails or password does not match
-        if(dbAccount == null) {
+        if (dbAccount == null) {
             return null;
-        }
-        else if (!dbAccount.getPassword().equals(account.getPassword())){
+        } else if (!dbAccount.getPassword().equals(account.getPassword())) {
             return null;
         }
         return dbAccount;

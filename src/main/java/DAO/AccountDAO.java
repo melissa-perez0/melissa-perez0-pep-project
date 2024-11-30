@@ -60,7 +60,7 @@ public class AccountDAO {
     /**
      * Retrieve a specific account using its account id.
      *
-     * @param username an account username.
+     * @param id an account id.
      */
     public Account getAccountById(int id) {
         Connection connection = ConnectionUtil.getConnection();
@@ -81,16 +81,17 @@ public class AccountDAO {
         return null;
     }
 
-
-     /**
-     * Add an account record into the database which matches the values contained in the account object.
+    /**
+     * Add an account record into the database which matches the values contained in
+     * the account object.
      * 
-     * @param account an object modelling an Account. The account object does not contain an account ID.
+     * @param account an object modelling an Account. The account object does not
+     *                contain an account ID.
      */
-    public Account insertAccount(Account account){
+    public Account insertAccount(Account account) {
         Connection connection = ConnectionUtil.getConnection();
         try {
-            String sql = "INSERT INTO account (username, password) VALUES (?, ?)" ;
+            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, account.username);
@@ -98,11 +99,11 @@ public class AccountDAO {
             preparedStatement.executeUpdate();
 
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-            if(pkeyResultSet.next()){
+            if (pkeyResultSet.next()) {
                 int generated_account_id = (int) pkeyResultSet.getLong(1);
                 return new Account(generated_account_id, account.getUsername(), account.getPassword());
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;

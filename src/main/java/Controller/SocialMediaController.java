@@ -34,9 +34,9 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountRegistration);
         app.post("/login", this::postAccountLogin);
-        app.get("/messages", this::getAllMessages);
+        app.get("/messages", this::getMessages);
         app.post("/messages", this::postCreateMessage);
-
+        app.get("/messages/{message_id}", this::getMessage);
         return app;
     }
 
@@ -150,10 +150,9 @@ public class SocialMediaController {
      * message_text is not longer than 255 characters.
      * message_text must be posted by a real, existing user.
      * 
-     * @param context
+     * @param text
      * 
-     * @throws JsonProcessingException will be thrown if there is an issue
-     *                                 converting JSON into an object.
+     * @return boolean
      */
     private boolean validateMessage(String text) {
         final int messageMaxLength = 255;
@@ -165,13 +164,35 @@ public class SocialMediaController {
         return true;
     }
 
-     /**
+    /**
      * Handler to retrieve all messages.
-     * @param ctx the context object handles information HTTP requests and generates responses within Javalin. It will
-     *            be available to this method automatically thanks to the app.put method.
+     * 
+     * @param context the context object handles information HTTP requests and
+     *                generates responses within Javalin. It will
+     *                be available to this method automatically thanks to the
+     *                app.put method.
      */
-    private void getAllMessages(Context ctx){
-        ctx.json(messageService.getAllMessages());
+    private void getMessages(Context context) {
+        context.json(messageService.getAllMessages());
     }
 
+    /**
+     * Handler to retrieve a message.
+     * 
+     * @param context the context object handles information HTTP requests and
+     *                generates responses within Javalin. It will
+     *                be available to this method automatically thanks to the
+     *                app.put method.
+     */
+    private void getMessage(Context context) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        int message_id = Integer.parseInt(context.pathParam("message_id"));
+        Message messageFound = messageService.getMessage(message_id);
+        if (messageFound != null) {
+            context.status(200).json(mapper.writeValueAsString(messageFound));
+        } else {
+            context.status(200);
+
+        }
+    }
 }
